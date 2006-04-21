@@ -4,7 +4,7 @@
   <extend>${base.project.dir}/block-dependencies.xml</extend>
   <pomVersion>3</pomVersion>
   <name>idegaWeb Single Sign On Block</name>
-  <artifactId>com.idega.block.process.webservice</artifactId>
+  <artifactId>com.idega.block.sso</artifactId>
   <!--currentVersion>0.1</currentVersion-->
   <currentVersion>1.0-SNAPSHOT</currentVersion>
 
