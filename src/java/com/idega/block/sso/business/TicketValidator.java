@@ -1,5 +1,5 @@
 /*
- * $Id: TicketValidator.java,v 1.1 2006/04/21 17:06:05 thomas Exp $
+ * $Id: TicketValidator.java,v 1.2 2006/04/22 09:14:48 laddi Exp $
  * Created on Mar 29, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -21,10 +21,10 @@ import com.idega.util.datastructures.map.TimeLimitedMap;
 
 /**
  * 
- *  Last modified: $Date: 2006/04/21 17:06:05 $ by $Author: thomas $
+ *  Last modified: $Date: 2006/04/22 09:14:48 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TicketValidator implements Singleton {
 	
@@ -45,14 +45,14 @@ public class TicketValidator implements Singleton {
 	
 	public void removeTicket(HttpSession session) {
 		String sessionId = session.getId();
-		sessionIdSession.remove(sessionId);
+		this.sessionIdSession.remove(sessionId);
 	}
 
 	public synchronized String addTicket(String personalId) {
 		HttpSession session = IWContext.getInstance().getSession();
 		String sessionId = session.getId();
-		if (!sessionIdSession.containsKey(sessionId)) {
-			sessionIdSession.put(sessionId, session);
+		if (!this.sessionIdSession.containsKey(sessionId)) {
+			this.sessionIdSession.put(sessionId, session);
 		}
 		return getTicket(personalId, sessionId);
 	}
@@ -85,7 +85,7 @@ public class TicketValidator implements Singleton {
 			return null;
 		}
 		
-		return (sessionIdSession.containsKey(sessionId)) ? personalId : null;
+		return (this.sessionIdSession.containsKey(sessionId)) ? personalId : null;
 		
 //		// getting a session object from this request
 //    	MessageContext context = MessageContext.getCurrentContext();

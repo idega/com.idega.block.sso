@@ -1,5 +1,5 @@
 /*
- * $Id: TicketAuthenticationFilter.java,v 1.1 2006/04/21 17:06:05 thomas Exp $
+ * $Id: TicketAuthenticationFilter.java,v 1.2 2006/04/22 09:14:48 laddi Exp $
  * Created on Apr 4, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -31,10 +31,10 @@ import com.idega.user.business.UserBusiness;
 
 /**
  * 
- *  Last modified: $Date: 2006/04/21 17:06:05 $ by $Author: thomas $
+ *  Last modified: $Date: 2006/04/22 09:14:48 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TicketAuthenticationFilter implements Filter {
 	
@@ -164,10 +164,10 @@ public class TicketAuthenticationFilter implements Filter {
 //	}
     	
     private LoginBusinessBean getLoginBusiness(IWApplicationContext iwac) {
-    	if (loginBusiness == null) { 
-        	loginBusiness = LoginBusinessBean.getLoginBusinessBean(iwac);
+    	if (this.loginBusiness == null) { 
+        	this.loginBusiness = LoginBusinessBean.getLoginBusinessBean(iwac);
     	}
-    	return loginBusiness;
+    	return this.loginBusiness;
 	}
 		
 //	private LoginTableHome getLoginTableHome() {
@@ -186,7 +186,7 @@ public class TicketAuthenticationFilter implements Filter {
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	public void init(FilterConfig arg0) throws ServletException {
-		myBase64Decoder = new BASE64Decoder();
+		this.myBase64Decoder = new BASE64Decoder();
 	}
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
