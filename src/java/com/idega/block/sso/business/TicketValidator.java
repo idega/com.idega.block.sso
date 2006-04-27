@@ -1,5 +1,5 @@
 /*
- * $Id: TicketValidator.java,v 1.2 2006/04/22 09:14:48 laddi Exp $
+ * $Id: TicketValidator.java,v 1.3 2006/04/27 20:05:20 thomas Exp $
  * Created on Mar 29, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -16,21 +16,22 @@ import com.idega.presentation.IWContext;
 import com.idega.repository.data.Instantiator;
 import com.idega.repository.data.Singleton;
 import com.idega.repository.data.SingletonRepository;
+import com.idega.util.StringHandler;
 import com.idega.util.datastructures.map.TimeLimitedMap;
 
 
 /**
  * 
- *  Last modified: $Date: 2006/04/22 09:14:48 $ by $Author: laddi $
+ *  Last modified: $Date: 2006/04/27 20:05:20 $ by $Author: thomas $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class TicketValidator implements Singleton {
 	
-	private final static String SEPARATOR = "t";
+	//private final static String SEPARATOR = "t";
 	
-	private final static long TIME_LIMIT_MINUTES = 40;
+	private final static long TIME_LIMIT_MINUTES = 80;
 	
 	private static Instantiator instantiator = new Instantiator() { public Object getInstance() { return new TicketValidator();}};
 
@@ -51,41 +52,30 @@ public class TicketValidator implements Singleton {
 	public synchronized String addTicket(String personalId) {
 		HttpSession session = IWContext.getInstance().getSession();
 		String sessionId = session.getId();
-		if (!this.sessionIdSession.containsKey(sessionId)) {
-			this.sessionIdSession.put(sessionId, session);
+		if (!sessionIdSession.containsKey(sessionId)) {
+			sessionIdSession.put(sessionId, personalId);
 		}
-		return getTicket(personalId, sessionId);
+		return getTicket(sessionId);
 	}
 
-	public boolean isValid(String ticket) { 
-		return (validate(ticket) != null);
+	public boolean isValid(String personalId, String ticket) {
+		if (StringHandler.isEmpty(personalId)) {
+			return false;
+		}
+		String ticketPersonalId = validate(ticket);
+		return personalId.equals(ticketPersonalId);
 	}
 		
+	/** 
+	 * returns the stored social security number
+	 * 
+	 * @param ticket
+	 * @return
+	 */
 	public String validate(String ticket) {	
-		int index = ticket.indexOf(SEPARATOR);
-		if (index < 1) {
-			return null;
-		}
-		String personalId = null;
-		String sessionId = null;
-		try {
-			int lengthOfPersonalId = Integer.parseInt(ticket.substring(0, index));
-			if (lengthOfPersonalId < 1) {
-				return null;
-			}
-			int startIndexSessionId = index + 1 + lengthOfPersonalId;
-			int ticketLength = ticket.length();
-			if (startIndexSessionId >= ticketLength) {
-				return null;
-			}
-			personalId = ticket.substring(index+1, startIndexSessionId);
-			sessionId = ticket.substring(startIndexSessionId, ticketLength);
-		}
-		catch (NumberFormatException e) {
-			return null;
-		}
-		
-		return (this.sessionIdSession.containsKey(sessionId)) ? personalId : null;
+		return (String) sessionIdSession.get(ticket);
+	}
+
 		
 //		// getting a session object from this request
 //    	MessageContext context = MessageContext.getCurrentContext();
@@ -107,7 +97,7 @@ public class TicketValidator implements Singleton {
     	
     	//return isLoggedOnUsingLoggedOnMap(userLogin, mySession, iwac) && isLoggedOnUsingSession(sessionId, iwac);
     	
-	}
+
 	
 //	private String getUserLogin(String personalId, IWApplicationContext iwac) {
 //		try {
@@ -151,14 +141,8 @@ public class TicketValidator implements Singleton {
 //		return getLoginBusinesBean(iwac).isLoggedOn(session);
 //	}
 //	
-	private String getTicket(String personalId, String sessionId) {		
-		int length = personalId.length();
-		StringBuffer token = new StringBuffer();
-		token.append(length);
-		token.append(SEPARATOR);
-		token.append(personalId);
-		token.append(sessionId);
-		return token.toString();
+	private String getTicket(String sessionId) {		
+		return sessionId;
 	}
 	
 //	private LoginBusinessBean getLoginBusinesBean(IWApplicationContext iwac) {
