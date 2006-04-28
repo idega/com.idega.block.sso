@@ -1,5 +1,5 @@
 /*
- * $Id: TicketValidator.java,v 1.3 2006/04/27 20:05:20 thomas Exp $
+ * $Id: TicketValidator.java,v 1.4 2006/04/28 08:55:20 laddi Exp $
  * Created on Mar 29, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -22,10 +22,10 @@ import com.idega.util.datastructures.map.TimeLimitedMap;
 
 /**
  * 
- *  Last modified: $Date: 2006/04/27 20:05:20 $ by $Author: thomas $
+ *  Last modified: $Date: 2006/04/28 08:55:20 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class TicketValidator implements Singleton {
 	
@@ -52,8 +52,8 @@ public class TicketValidator implements Singleton {
 	public synchronized String addTicket(String personalId) {
 		HttpSession session = IWContext.getInstance().getSession();
 		String sessionId = session.getId();
-		if (!sessionIdSession.containsKey(sessionId)) {
-			sessionIdSession.put(sessionId, personalId);
+		if (!this.sessionIdSession.containsKey(sessionId)) {
+			this.sessionIdSession.put(sessionId, personalId);
 		}
 		return getTicket(sessionId);
 	}
@@ -73,7 +73,7 @@ public class TicketValidator implements Singleton {
 	 * @return
 	 */
 	public String validate(String ticket) {	
-		return (String) sessionIdSession.get(ticket);
+		return (String) this.sessionIdSession.get(ticket);
 	}
 
 		
