@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <projectDescription>
-  <name>com.idega.block.process.webservice</name>
+  <name>com.idega.block.sso</name>
   <comment>
   </comment>
   <projects>
     <project>com.idega.core</project>
+    <project>com.idega.block.web2.0</project>
   </projects>
   <buildSpec>
     <buildCommand>
