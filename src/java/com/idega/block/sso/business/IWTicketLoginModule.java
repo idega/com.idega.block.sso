@@ -1,5 +1,5 @@
 /*
- * $Id: IWTicketLoginModule.java,v 1.1 2006/05/18 17:09:30 thomas Exp $
+ * $Id: IWTicketLoginModule.java,v 1.2 2006/05/19 07:37:51 laddi Exp $
  * Created on May 9, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -39,10 +39,10 @@ import com.idega.user.data.User;
 
 /**
  * 
- *  Last modified: $Date: 2006/05/18 17:09:30 $ by $Author: thomas $
+ *  Last modified: $Date: 2006/05/19 07:37:51 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IWTicketLoginModule implements LoginModule {
 	
@@ -75,23 +75,23 @@ public class IWTicketLoginModule implements LoginModule {
 		// + login failed
 		// or
 		// + credential (and login session) is already set
-		if (! isLoggedIn || credentialIsSet) {
+		if (! this.isLoggedIn || this.credentialIsSet) {
 			// see javadoc!
 			return true;
 		}
-		HttpSession session = (HttpSession) sharedState.get(IWAuthenticator.SESSION_KEY);
+		HttpSession session = (HttpSession) this.sharedState.get(IWAuthenticator.SESSION_KEY);
 		
 		// is there a ticket?
-		if (ticket == null) {
+		if (this.ticket == null) {
 			// ticket is null if the user logged in not using a ticket
 			LoginBusinessBean loginBean = LoginBusinessBean.getLoginBusinessBean(session);
 			User user = loginBean.getCurrentUser(session);
 			// set ticket
-			ticket = IWTicket.create(user, session, ORIGINATOR_NAME);
+			this.ticket = IWTicket.create(user, session, ORIGINATOR_NAME);
 		}
 		else {
 			try {
-				ticket.refresh();
+				this.ticket.refresh();
 			}
 			catch (RefreshFailedException ex) {
 				// see javadoc
@@ -100,10 +100,10 @@ public class IWTicketLoginModule implements LoginModule {
 		}
 		
 		// if the user isn't logged in 
-		if (! loginSessionIsSet ) {
+		if (! this.loginSessionIsSet ) {
 			// first login in idega
-			HttpServletRequest request = (HttpServletRequest)   sharedState.get(IWAuthenticator.REQUEST_KEY);
-			String personalId = ticket.getPersonalId();
+			HttpServletRequest request = (HttpServletRequest)   this.sharedState.get(IWAuthenticator.REQUEST_KEY);
+			String personalId = this.ticket.getPersonalId();
 			login(request, session, personalId);
 		}
 		
@@ -117,7 +117,7 @@ public class IWTicketLoginModule implements LoginModule {
 				if (credentials.containsKey(IWTicketLoginModule.ORIGINATOR_NAME)) {
 					return true;
 				}
-				IWCredential ticketCredential = new TicketCredential(ticket.getKey());
+				IWCredential ticketCredential = new TicketCredential(this.ticket.getKey());
 				credentials.put(IWTicketLoginModule.ORIGINATOR_NAME, ticketCredential);
 			}
 		}
@@ -140,7 +140,7 @@ public class IWTicketLoginModule implements LoginModule {
 		// if the user is already logged in:
 		// 1. we do not have to check for a ticket 
 		// 2. we accept the given login even if there is no ticket
-		HttpSession session = (HttpSession) sharedState.get(IWAuthenticator.SESSION_KEY);
+		HttpSession session = (HttpSession) this.sharedState.get(IWAuthenticator.SESSION_KEY);
 		if (session != null && IBOLookup.isSessionBeanInitialized(session, LoginSession.class)) {
 			LoginSession loginSession;
 			try {
@@ -148,9 +148,9 @@ public class IWTicketLoginModule implements LoginModule {
 				LoggedOnInfo loggedOnInfo = loginSession.getLoggedOnInfo();
 				if (loggedOnInfo != null) {
 					Map credentials = loggedOnInfo.getCredentials();
-					credentialIsSet = credentials.containsKey(IWTicketLoginModule.ORIGINATOR_NAME);
-					isLoggedIn = true;
-					loginSessionIsSet = true;
+					this.credentialIsSet = credentials.containsKey(IWTicketLoginModule.ORIGINATOR_NAME);
+					this.isLoggedIn = true;
+					this.loginSessionIsSet = true;
 					return true;
 				}
 			}
@@ -171,7 +171,7 @@ public class IWTicketLoginModule implements LoginModule {
 		callbacks[0] = new PasswordCallback(TicketCredential.NAME, true);
 		callbacks[1] = new NameCallback("PersonalId");
 		try {
-			callbackHandler.handle(callbacks);
+			this.callbackHandler.handle(callbacks);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -188,21 +188,21 @@ public class IWTicketLoginModule implements LoginModule {
 			String name = ((NameCallback) callbacks[1]).getName();
 			tempTicket = IWTicket.get(ticketKey);
 			if (tempTicket == null) {
-				isLoggedIn = false;
+				this.isLoggedIn = false;
 			}
 			// if the name is given check if the name belongs to the ticket
 			else if (name == null) {
-				isLoggedIn = (tempTicket.isCurrent());
+				this.isLoggedIn = (tempTicket.isCurrent());
 			}
 			else {
-				isLoggedIn = tempTicket.isValidFor(name);
+				this.isLoggedIn = tempTicket.isValidFor(name);
 			}
 		}
-		if (isLoggedIn) {
+		if (this.isLoggedIn) {
 			// use the existing valid ticket
-			ticket = tempTicket;
+			this.ticket = tempTicket;
 		}
-		return isLoggedIn;
+		return this.isLoggedIn;
  	}
 
 
@@ -240,10 +240,10 @@ public class IWTicketLoginModule implements LoginModule {
 	}
 	
     private LoginBusinessBean getLoginBusiness(IWApplicationContext iwac) {
-    	if (loginBusiness == null) { 
-        	loginBusiness = LoginBusinessBean.getLoginBusinessBean(iwac);
+    	if (this.loginBusiness == null) { 
+        	this.loginBusiness = LoginBusinessBean.getLoginBusinessBean(iwac);
     	}
-    	return loginBusiness;
+    	return this.loginBusiness;
 	}	
     
 }

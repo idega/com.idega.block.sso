@@ -1,5 +1,5 @@
 /*
- * $Id: TicketCredential.java,v 1.1 2006/05/18 17:09:30 thomas Exp $
+ * $Id: TicketCredential.java,v 1.2 2006/05/19 07:37:51 laddi Exp $
  * Created on May 10, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -15,10 +15,10 @@ import com.idega.core.accesscontrol.jaas.IWCredential;
 
 /**
  * 
- *  Last modified: $Date: 2006/05/18 17:09:30 $ by $Author: thomas $
+ *  Last modified: $Date: 2006/05/19 07:37:51 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TicketCredential implements IWCredential {
 	
@@ -34,7 +34,7 @@ public class TicketCredential implements IWCredential {
 	 * @see com.idega.core.accesscontrol.jaas.IWCredential#getKey()
 	 */
 	public Object getKey() {
-		return ticket;
+		return this.ticket;
 	}
 
 	/* (non-Javadoc)
@@ -48,14 +48,14 @@ public class TicketCredential implements IWCredential {
 	 * @see javax.security.auth.Destroyable#destroy()
 	 */
 	public void destroy() throws DestroyFailedException {
-		ticket = null;
+		this.ticket = null;
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.security.auth.Destroyable#isDestroyed()
 	 */
 	public boolean isDestroyed() {
-		return ticket == null;
+		return this.ticket == null;
 	}
 	
 	public boolean equals(Object anObject) {
@@ -67,16 +67,16 @@ public class TicketCredential implements IWCredential {
 		}
 		TicketCredential anotherTicketCredential = (TicketCredential) anObject;
 		String anotherTicket = (String) anotherTicketCredential.getKey();
-		if (anotherTicket == null && ticket == null) {
+		if (anotherTicket == null && this.ticket == null) {
 			return true;
 		}
 		if (anotherTicket == null) {
 			return false;
 		}
-		return anotherTicket.equals(ticket);
+		return anotherTicket.equals(this.ticket);
 	}
 
 	public int hashCode() {
-		return ticket.hashCode();
+		return this.ticket.hashCode();
 	}
 }
