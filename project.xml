@@ -5,8 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Single Sign On Block</name>
   <artifactId>com.idega.block.sso</artifactId>
-  <!--currentVersion>0.1</currentVersion-->
-  <currentVersion>1.0-SNAPSHOT</currentVersion>
+  <currentVersion>3.1.0</currentVersion>
 
   <inceptionYear>2006</inceptionYear>
   <shortDescription>Single Sign On</shortDescription>
@@ -25,8 +24,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.core</artifactId>
-      <!--version>3.0.5</version-->
-      <version>SNAPSHOT</version>
+      <version>3.1.0</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
