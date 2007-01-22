@@ -7,7 +7,7 @@
   <artifactId>com.idega.block.sso</artifactId>
   <currentVersion>3.1.0</currentVersion>
   <inceptionYear>2006</inceptionYear>
-  <shortDescription>Single Sign Module</shortDescription>
+  <shortDescription>Single Sign-On Module</shortDescription>
   <versions>
     <version>
       <id>3.1.0</id>
