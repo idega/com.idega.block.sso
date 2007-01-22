@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Single Sign On Block</name>
   <artifactId>com.idega.block.sso</artifactId>
-  <currentVersion>3.1.0</currentVersion>
+  <currentVersion>3.1.1</currentVersion>
   <inceptionYear>2006</inceptionYear>
   <shortDescription>Single Sign-On Module</shortDescription>
   <versions>
@@ -13,6 +13,11 @@
       <id>3.1.0</id>
       <name>3.1.0</name>
       <tag>SSO_3_1_0</tag>
+    </version>
+    <version>
+      <id>3.1.1</id>
+      <name>3.1.1</name>
+      <tag>SSO_3_1_1</tag>
     </version>
   </versions>
   <branches/>
