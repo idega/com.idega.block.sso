@@ -1,5 +1,5 @@
 /*
- * $Id: IWTicketLoginModule.java,v 1.2 2006/05/19 07:37:51 laddi Exp $
+ * $Id: IWTicketLoginModule.java,v 1.3 2008/04/24 23:34:49 laddi Exp $
  * Created on May 9, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -10,8 +10,8 @@
 package com.idega.block.sso.business;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Map;
+
 import javax.security.auth.RefreshFailedException;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -24,6 +24,7 @@ import javax.security.auth.spi.LoginModule;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import com.idega.block.sso.data.IWTicket;
 import com.idega.block.sso.data.TicketCredential;
 import com.idega.business.IBOLookup;
@@ -39,10 +40,10 @@ import com.idega.user.data.User;
 
 /**
  * 
- *  Last modified: $Date: 2006/05/19 07:37:51 $ by $Author: laddi $
+ *  Last modified: $Date: 2008/04/24 23:34:49 $ by $Author: laddi $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class IWTicketLoginModule implements LoginModule {
 	
@@ -125,10 +126,6 @@ public class IWTicketLoginModule implements LoginModule {
 			e.printStackTrace();
 			return true;
 		}
-		catch (RemoteException e) {
-			e.printStackTrace();
-			return true;
-		}
 		// see javadoc!
 		return true;
 	}
@@ -158,11 +155,6 @@ public class IWTicketLoginModule implements LoginModule {
 				e.printStackTrace();
 				return false;
 			}
-			catch (RemoteException e) {
-				e.printStackTrace();
-				return false;
-			}
-			
 		}
 
 		// second case: user is not logged in
