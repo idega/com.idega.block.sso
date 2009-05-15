@@ -1,5 +1,5 @@
 /*
- * $Id: IWTicketLoginModule.java,v 1.3 2008/04/24 23:34:49 laddi Exp $
+ * $Id: IWTicketLoginModule.java,v 1.4 2009/05/15 07:23:47 valdas Exp $
  * Created on May 9, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
@@ -27,8 +27,6 @@ import javax.servlet.http.HttpSession;
 
 import com.idega.block.sso.data.IWTicket;
 import com.idega.block.sso.data.TicketCredential;
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.core.accesscontrol.business.LoggedOnInfo;
 import com.idega.core.accesscontrol.business.LoginBusinessBean;
 import com.idega.core.accesscontrol.business.LoginSession;
@@ -37,13 +35,14 @@ import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.servlet.filter.IWAuthenticator;
 import com.idega.user.data.User;
+import com.idega.util.expression.ELUtil;
 
 /**
  * 
- *  Last modified: $Date: 2008/04/24 23:34:49 $ by $Author: laddi $
+ *  Last modified: $Date: 2009/05/15 07:23:47 $ by $Author: valdas $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class IWTicketLoginModule implements LoginModule {
 	
@@ -110,7 +109,7 @@ public class IWTicketLoginModule implements LoginModule {
 		
 		LoginSession loginSession;
 		try {
-			loginSession = (LoginSession) IBOLookup.getSessionInstance(session,LoginSession.class);
+			loginSession = ELUtil.getInstance().getBean(LoginSession.class);
 			LoggedOnInfo loggedOnInfo = loginSession.getLoggedOnInfo();
 			if (loggedOnInfo != null) {
 				Map credentials = loggedOnInfo.getCredentials();
@@ -122,7 +121,7 @@ public class IWTicketLoginModule implements LoginModule {
 				credentials.put(IWTicketLoginModule.ORIGINATOR_NAME, ticketCredential);
 			}
 		}
-		catch (IBOLookupException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 			return true;
 		}
@@ -138,10 +137,10 @@ public class IWTicketLoginModule implements LoginModule {
 		// 1. we do not have to check for a ticket 
 		// 2. we accept the given login even if there is no ticket
 		HttpSession session = (HttpSession) this.sharedState.get(IWAuthenticator.SESSION_KEY);
-		if (session != null && IBOLookup.isSessionBeanInitialized(session, LoginSession.class)) {
+		if (session != null) {
 			LoginSession loginSession;
 			try {
-				loginSession = (LoginSession) IBOLookup.getSessionInstance(session,LoginSession.class);
+				loginSession = ELUtil.getInstance().getBean(LoginSession.class);
 				LoggedOnInfo loggedOnInfo = loginSession.getLoggedOnInfo();
 				if (loggedOnInfo != null) {
 					Map credentials = loggedOnInfo.getCredentials();
@@ -151,7 +150,7 @@ public class IWTicketLoginModule implements LoginModule {
 					return true;
 				}
 			}
-			catch (IBOLookupException e) {
+			catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
