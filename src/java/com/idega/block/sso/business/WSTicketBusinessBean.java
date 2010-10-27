@@ -32,6 +32,8 @@ import com.idega.repository.data.ImplementorRepository;
  */
 public class WSTicketBusinessBean  extends IBOServiceBean implements WSTicketBusiness{
 	
+	private static final long serialVersionUID = -1266956221429223905L;
+
 	public boolean validateTicket(String socialsecurity, String ticket) {
 		List loginModules = ImplementorRepository.getInstance().newInstances(LoginModule.class, this.getClass());
 		// just a shortcut 
