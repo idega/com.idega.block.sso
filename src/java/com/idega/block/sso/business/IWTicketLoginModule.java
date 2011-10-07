@@ -34,33 +34,34 @@ import com.idega.core.accesscontrol.jaas.IWCredential;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.servlet.filter.IWAuthenticator;
-import com.idega.user.data.User;
+import com.idega.user.data.bean.User;
 import com.idega.util.expression.ELUtil;
 
 /**
- * 
+ *
  *  Last modified: $Date: 2009/05/15 07:23:47 $ by $Author: valdas $
- * 
+ *
  * @author <a href="mailto:thomas@idega.com">thomas</a>
  * @version $Revision: 1.4 $
  */
 public class IWTicketLoginModule implements LoginModule {
-	
+
 	public static final String ORIGINATOR_NAME = IWTicketLoginModule.class.getName();
-	
+
 	Map sharedState = null;
 	CallbackHandler callbackHandler = null;
-	
+
 	private boolean isLoggedIn = false;
-	private IWTicket ticket= null; 
+	private IWTicket ticket= null;
 	private boolean credentialIsSet = false;
 	private boolean loginSessionIsSet = false;
-	
+
 	private LoginBusinessBean loginBusiness = null;
 
 	/* (non-Javadoc)
 	 * @see javax.security.auth.spi.LoginModule#abort()
 	 */
+	@Override
 	public boolean abort() throws LoginException {
 		// TODO Auto-generated method stub
 		return false;
@@ -69,6 +70,7 @@ public class IWTicketLoginModule implements LoginModule {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.spi.LoginModule#commit()
 	 */
+	@Override
 	public boolean commit() throws LoginException {
 		// nothing to do if
 		// either
@@ -80,7 +82,7 @@ public class IWTicketLoginModule implements LoginModule {
 			return true;
 		}
 		HttpSession session = (HttpSession) this.sharedState.get(IWAuthenticator.SESSION_KEY);
-		
+
 		// is there a ticket?
 		if (this.ticket == null) {
 			// ticket is null if the user logged in not using a ticket
@@ -98,15 +100,15 @@ public class IWTicketLoginModule implements LoginModule {
 				return true;
 			}
 		}
-		
-		// if the user isn't logged in 
+
+		// if the user isn't logged in
 		if (! this.loginSessionIsSet ) {
 			// first login in idega
 			HttpServletRequest request = (HttpServletRequest)   this.sharedState.get(IWAuthenticator.REQUEST_KEY);
 			String personalId = this.ticket.getPersonalId();
 			login(request, session, personalId);
 		}
-		
+
 		LoginSession loginSession;
 		try {
 			loginSession = ELUtil.getInstance().getBean(LoginSession.class);
@@ -132,9 +134,10 @@ public class IWTicketLoginModule implements LoginModule {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.spi.LoginModule#login()
 	 */
+	@Override
 	public boolean login() throws LoginException {
 		// if the user is already logged in:
-		// 1. we do not have to check for a ticket 
+		// 1. we do not have to check for a ticket
 		// 2. we accept the given login even if there is no ticket
 		HttpSession session = (HttpSession) this.sharedState.get(IWAuthenticator.SESSION_KEY);
 		if (session != null) {
@@ -201,6 +204,7 @@ public class IWTicketLoginModule implements LoginModule {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.spi.LoginModule#logout()
 	 */
+	@Override
 	public boolean logout() throws LoginException {
 		// nothing to do since credentials are stored in LogOnInfo
 		return true;
@@ -209,11 +213,12 @@ public class IWTicketLoginModule implements LoginModule {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.spi.LoginModule#initialize(javax.security.auth.Subject, javax.security.auth.callback.CallbackHandler, java.util.Map, java.util.Map)
 	 */
+	@Override
 	public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
 		this.sharedState = sharedState;
 		this.callbackHandler = callbackHandler;
 	}
-	
+
 	private void login(HttpServletRequest request, HttpSession session, String personalID) {
 		ServletContext myServletContext = session.getServletContext();
 	   	// getting the application context
@@ -229,13 +234,13 @@ public class IWTicketLoginModule implements LoginModule {
     		// empty
     	}
 	}
-	
+
     private LoginBusinessBean getLoginBusiness(IWApplicationContext iwac) {
-    	if (this.loginBusiness == null) { 
+    	if (this.loginBusiness == null) {
         	this.loginBusiness = LoginBusinessBean.getLoginBusinessBean(iwac);
     	}
     	return this.loginBusiness;
-	}	
-    
+	}
+
 }
 

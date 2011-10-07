@@ -14,23 +14,23 @@ import javax.security.auth.Destroyable;
 import javax.security.auth.RefreshFailedException;
 import javax.security.auth.Refreshable;
 import javax.servlet.http.HttpSession;
-import com.idega.user.data.User;
 
+import com.idega.user.data.bean.User;
 
 /**
- * 
+ *
  *  Last modified: $Date: 2006/05/19 07:37:51 $ by $Author: laddi $
- * 
+ *
  * @author <a href="mailto:thomas@idega.com">thomas</a>
  * @version $Revision: 1.2 $
  */
 public class IWTicket implements Destroyable, Refreshable {
-	
+
 	public final static long EXPIRATION_TIME_IN_MIN = 90;
-	
+
 	// avoid miscalculations
 	private final static long EXPIRATION_TIME_IN_MILLISECOND = EXPIRATION_TIME_IN_MIN *60 * 1000;
-	
+
 	public static IWTicket create(User user, HttpSession session, String originator) {
 		String sessionId = session.getId();
 		// has to be set in milliseconds
@@ -40,28 +40,28 @@ public class IWTicket implements Destroyable, Refreshable {
 		TicketValidator.getInstance().put(ticket);
 		return ticket;
 	}
-	
+
 	public static IWTicket get(String ticketKey) {
 		return TicketValidator.getInstance().get(ticketKey);
 	}
-		 
-	
+
+
 	private String originator = null;
-	
+
 	private String myPersonalId = null;
-	
+
 	private String key = null;
-	
+
 	private long authTime = -1;
-	
+
 	private long startTime = -1;
-	
+
 	private long expirationTime = -1;
-	
+
 	public IWTicket(User user, String key, String originator, long authTime, long expirationTime) {
 		this(user.getPersonalID(), key, originator, authTime, expirationTime);
 	}
-	
+
 	public IWTicket(String personalId, String key, String originator, long authTime, long expirationTime) {
 		this.authTime = authTime;
 		this.startTime = authTime;
@@ -70,7 +70,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		this.key = key;
 		this.originator = originator;
 	}
-	
+
 	public boolean isValidFor(String personalId) {
 		if (! isCurrent()) {
 			return false;
@@ -83,7 +83,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		}
 		return this.myPersonalId.equals(personalId);
 	}
-	
+
 	/**
 	 * @return Returns the key.
 	 */
@@ -91,7 +91,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		return this.key;
 	}
 
-	
+
 	/**
 	 * @param key The key to set.
 	 */
@@ -99,7 +99,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		this.key = key;
 	}
 
-	
+
 	/**
 	 * @return Returns the personalId.
 	 */
@@ -107,7 +107,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		return this.myPersonalId;
 	}
 
-	
+
 	/**
 	 * @param personalId The personalId to set.
 	 */
@@ -118,6 +118,7 @@ public class IWTicket implements Destroyable, Refreshable {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.Destroyable#destroy()
 	 */
+	@Override
 	public void destroy() throws DestroyFailedException {
 		this.originator = null;
 		this.myPersonalId = null;
@@ -130,6 +131,7 @@ public class IWTicket implements Destroyable, Refreshable {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.Destroyable#isDestroyed()
 	 */
+	@Override
 	public boolean isDestroyed() {
 		return this.key == null;
 	}
@@ -137,6 +139,7 @@ public class IWTicket implements Destroyable, Refreshable {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.Refreshable#refresh()
 	 */
+	@Override
 	public void refresh() throws RefreshFailedException {
 		this.startTime = System.currentTimeMillis();
 		// notify registry
@@ -146,12 +149,13 @@ public class IWTicket implements Destroyable, Refreshable {
 	/* (non-Javadoc)
 	 * @see javax.security.auth.Refreshable#isCurrent()
 	 */
+	@Override
 	public boolean isCurrent() {
 		long currentTime = System.currentTimeMillis();
 		return this.startTime + this.expirationTime > currentTime;
 	}
 
-	
+
 	/**
 	 * @return Returns the authTime.
 	 */
@@ -159,7 +163,7 @@ public class IWTicket implements Destroyable, Refreshable {
 		return this.authTime;
 	}
 
-	
+
 	/**
 	 * @return Returns the originator.
 	 */
